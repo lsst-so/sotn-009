@@ -2,6 +2,7 @@
 
 ```{abstract}
 Documentation regarding upgrading our Portable DIMM to a RINGSS instrument.
+This is based on Andrei Tokovinin work, who has helped us designing this iteration.
 ```
 
 ## 1. Overview and Objective
