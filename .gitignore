@@ -3,3 +3,16 @@ _build/
 .tox/
 venv/
 .venv/
+
+.ipynb_checkpoints/
+*.gif
+*.jpg
+*.jpeg
+*.npz
+*.pdf
+*.tiff
+*.tif
+*.fit
+*.fits
+*.csv
+*.bak

@@ -17,7 +17,7 @@ The main goal is to transform the current **Portable DIMM (DIMM:2)** into a **RI
 
 ## 2. Theory
 
-Andrei Tokovinin developed the first iterationof the RINGSS, in its paper [Cite], where he talked about the posibility of a larger RINGSS than what he designed, so we enter to prove (or disprove) that a 304mm monitor is feasible and trust worthy, this would also prove all intermediate sizes, allowing institutions and observatories to give any unused telescope a new life.
+Andrei Tokovinin developed the first iteration of RINGSS, in its paper [Cite], where he talked about the posibility of a larger RINGSS than what he designed, so we enter to prove (or disprove) that a 304mm monitor is feasible and trust worthy, this would also prove all intermediate sizes, allowing institutions and observatories to give any unused telescope a new life.
 
 (Here we reference papers)
 
