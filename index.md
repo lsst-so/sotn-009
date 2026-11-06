@@ -1,20 +1,23 @@
 # DIMM to RINGSS Upgrade
 
 ```{abstract}
-Documentation regarding upgrading our Portable DIMM to a RINGSS instrument.
+Documentation regarding our Portable DIMM to RINGSS upgrade.\
 This is based on Andrei Tokovinin work, who has helped us designing this iteration.
 ```
 
 ## 1. Overview and Objective
 
 In an era with ever-growing telescopes and cameras, reliable atmosphere monitors are necessary as ever. From DIMM to MASS these monitors have been constantly evolving, with different challenges and caveats in their construction and design. In the last decade, Andrei Tokovinin and collaborators introduced the Ring Image Next Generation Scintillation Sensor (RINGSS) as a new solution for turbulence profiling and atmosphere characterization.[]/
-RINGSS combines a scintillation sensor and a motion monitor in a compact, as originally designed, 127mm from-shelf telescope, in combination with a set of lenses and a camera capable of over one-thousand frames per second in a relatively small region of interest.[] All this to maintain a quick processing time and low-cost equipment.[] Maintaining this low-cost idea, we aim to upgrade an under-used DIMM telescope at Rubin (commonly refered to as Portable DIMM), and with minimal changes implement a RINGSS in a only-theorized 304mm telescope [] (should I say where the issue stems from?)
+RINGSS combines a scintillation sensor and a motion monitor in a compact, as originally designed, 127mm from-shelf telescope, in combination with a set of lenses and a camera capable of over one-thousand frames per second in a relatively small region of interest[], all this to maintain a quick processing time and low-cost equipment.[] We then take this idea and tackle it with a question, "Can we develop a bigger diameter RINGSS?". We aim to upgrade an under-used DIMM telescope at Rubin (commonly refered to as Portable DIMM), and with minimal changes implement a RINGSS in a only-theorized 304mm telescope.[]
 
 
 ## 2. Theory
 
-Andrei Tokovinin developed the first iteration of RINGSS, in its paper [Cite], where he talked about the posibility of a larger RINGSS than what he designed, so we enter to prove (or disprove) that a 304mm monitor is feasible and trust worthy, this would also prove all intermediate sizes, allowing institutions and observatories to give any unused telescope a new life.\
-(Here we reference papers)
+The straight-forward objective of these sky monitors is to measure and characterize how the atmosphere affects the quality of image we can achieve with our telescopes. The atmosphere can be divided in two main layers; the ground layer, where up to 2km we have most of turbulence caused by, redundantly, ground features and low wind, but not less important over these 2 km we have the free atmosphere, that is dominated by high winds and turbulence bubbles up to 30km where we have 99% of the atmosphere[]. From our position, we can only see this as a single flat screen *(right?)*. RINGSS takes a cube-image of a single defocused bright star and measures the Optical Turbulence Profile along our optical path.[]\
+\
+RINGSS works by measuring a defocused pupil image of the telescope. It introduces spherical aberrations through a calibrated set of lenses[], and physically creates a sharp conic wavefront focused on the radial axis[], hence the "Ring Image" part of the name. This ring image is both analyzed as a MASS instrument, taking the complete brightness variation into a scintillation sensor, and by dividing the ring into eight oppossed sectors, using DIMM-like processing to find a sector derived seeing[]. \
+\
+We take into account the Turbulence Profile, Fried parameter, Rytov variances, Kolmogorov power law, Weights of each layer, and derive windspeed, free atmosphere, sector seeing and scintilaltion seeing.
 
 ## 3. Simulations and models
 
