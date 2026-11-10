@@ -8,7 +8,8 @@ This is based on Andrei Tokovinin work, who has helped us designing this iterati
 ## 1. Overview and Objective
 
 In an era with ever-growing telescopes and cameras, reliable atmosphere monitors are necessary as ever. From DIMM to MASS these monitors have been constantly evolving, with different challenges and caveats in their construction and design. In the last decade, Andrei Tokovinin and collaborators introduced the Ring Image Next Generation Scintillation Sensor (RINGSS) as a new solution for turbulence profiling and atmosphere characterization.[]\
-RINGSS combines a scintillation sensor and a motion monitor in a compact, as originally designed, 127mm from-shelf telescope, in combination with a set of lenses and a camera capable of over one-thousand frames per second in a relatively small region of interest[], all this to maintain a quick processing time and low-cost equipment.[] We then take this idea and tackle it with a question, "Can we develop a bigger diameter RINGSS?". We aim to upgrade an under-used DIMM telescope at Rubin (commonly refered to as Portable DIMM), and with minimal changes implement a RINGSS in a only-theorized 304mm telescope.[]
+RINGSS combines a scintillation sensor and a motion monitor in a compact, as originally designed, 127mm from-shelf telescope, in combination with a set of lenses and a camera capable of over one-thousand frames per second in a relatively small region of interest[], all this to maintain a quick processing time and low-cost equipment.[] We then take this idea and tackle it with a question, "Can we develop a bigger diameter RINGSS?". We aim to upgrade an under-used DIMM telescope at Rubin (commonly refered to as Portable DIMM), and with minimal changes implement a RINGSS in a only-theorized 304mm telescope.[]\
+Even though we develop most part of python scripts, and the other half was already done by Andrei, we have not yet tested the telescope on-sky.
 
 
 ## 2. Theory
@@ -29,6 +30,7 @@ Then, if we take the weights and we invert them against the measured power spect
 
 Zemax: Out from schemas and simple measurements of the telescope, we were able to broadly design the optical model in Ansys' Zemax Optical Modelling software, where it let us test for different combination of lenses and cameras, thanks to manufacturer-provided lens models. This model was later reinforced by the optical characterization of the telescope through Xin and Claver's Curvature Wavefront Sensing scripts (CWFS github)[], as we found the native aberrations of the OTA without needing to disassemble it (and produce more aberrations). This images for the CWFS were taking at night, with two streetlights at 2 and 10 km, so they were point sources for the camera, a Prosilica GC650.
 
+(Zemax Image)
 
 Python: Andrei Tokovinin developed a Simulator to test possible configurations and check the modelling was correct for on-sky observations. Even though this was scripted in IDL, we translated the codes to Python 3.8 as faithful as possible, maintaining procedures, and adapting it to the different methods Python has, as well as making it more human readable and easy to test, both in CLI and in a Jupyter Notebook.
 
@@ -44,7 +46,9 @@ We can note that the complete RINGSS code separates in three sections; Acquisiti
 
 ## 4. Hardware and implementation
 
-As the current Tower DIMM at Rubin, we are using an IOptron Ritchey-Chretien 12" OTA, in conjuntion with two ThorLabs lenses (which ones) at a distance of (X mm) between them, and (Y mm) to the camera, that as we said earlier is currently a new Allied Vision Mako G-040B Monochrome camera, with a detector of A x B pixels with 6.9 microns in size. This camera was/will be characterized to find the Read Out Noise and Spectral Response (?), and infront of it there will be installed two filters that constrain the incoming light from the telescope to only 400nm to 700nm (ThorLabs filters). The mount wasn't upgraded, as the Astelco NTM-600 is still a working piece, allowing the telescope to easily follow the stars in equatorial mode, reducing vibrations and movements from the mount that would be introduced to the camera and therefore acquisition and processing program. This configuration will/should be dry-tested on sky, with pending acquisition software and deployment to be fully constructed on 2027.
+As the current Tower DIMM at Rubin, we are using an IOptron Ritchey-Chretien 12" OTA, in conjuntion with a 25.4 mm Ø and 125 mm Focal length ThorLabs lens at a distance of 152.9 mm from the backplate and at 59.44 mm to the camera, that as we said earlier is currently a new Allied Vision Mako G-040B Monochrome camera, with a CMOS detector of 728 x 544 pixels with 6.9 microns in size, but to achieve the 1000 FPS needed we only use a 64x64 ROI. This camera should be characterized to find the Read Out Noise and Spectral Response, and infront of it there will be installed two filters that constrain the incoming light from the telescope to only 400nm to 700nm (FESH0700 + FELH0550 ThorLabs filters). The mount wasn't upgraded, as the Astelco NTM-600 is still a working piece, allowing the telescope to easily follow the stars in equatorial mode, reducing vibrations and movements from the mount that would be introduced to the camera, therefore to the acquisition and processing program. This configuration will be dry-tested on sky, with pending acquisition software and deployment to be fully constructed on 2027.
+
+(IRL Image)
 
 ## 5. Testing
 
