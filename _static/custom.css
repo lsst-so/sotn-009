@@ -1,0 +1,6 @@
+/* Justify body paragraphs in the technote content area. */
+.technote-article-container p {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
