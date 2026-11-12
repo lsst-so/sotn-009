@@ -10,5 +10,6 @@ Currently, this contains:
 \
 We need to add:
 - "An Embodiment of the Ring-Image Next Generation Scintillation Sensor", A. Dobbyn
+- "DIMM to RINGSS upgrade" (slideshow), D. Hurtado
 - "Investigation of turbulence profile restoration in RINGSS", A. Tokovinin
 - + Other Andrei's RINGSS and atmosphere related papers
