@@ -5,7 +5,8 @@ Currently, this contains:
 - "RINGSS turbulence sensor based on Celestron Nexstar 5SE", A. Tokovinin
 - "Measurement of turbulence profile from defocused ring images", A. Tokovinin
 - "Site monitor based on the RINGSS concept", E. Bustos, A. Tokovinin, R. Rivera
-- "Python software for turbulence measurements with RINGSS", A. Tokovinin 
+- "Python software for turbulence measurements with RINGSS", A. Tokovinin
+- "The elusive nature of seeing", A. Tokovinin
 
 \
 We need to add:
