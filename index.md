@@ -7,16 +7,16 @@ This is based on Andrei Tokovinin work, who has helped us designing this iterati
 
 ## 1. Overview and Objective
 
-In an era with ever-growing telescopes and cameras, reliable atmosphere monitors are necessary as ever. From DIMM to MASS these monitors have been constantly evolving, with different challenges and caveats in their construction and design. In the last decade, Andrei Tokovinin and collaborators introduced the Ring Image Next Generation Scintillation Sensor (RINGSS) as a new solution for turbulence profiling and atmosphere characterization.[]\
-RINGSS combines a scintillation sensor and a motion monitor in a compact, as originally designed, 127mm from-shelf telescope, in combination with a set of lenses and a camera capable of over one-thousand frames per second in a relatively small region of interest[], all this to maintain a quick processing time and low-cost equipment.[] We then take this idea and tackle it with a question, "Can we develop a bigger diameter RINGSS?". We aim to upgrade an under-used DIMM telescope at Rubin (commonly refered to as Portable DIMM), and with minimal changes implement a RINGSS in a only-theorized 304mm telescope.[]\
+In an era with ever-growing telescopes and cameras, reliable atmosphere monitors are necessary as ever. From DIMM to MASS these monitors have been constantly evolving, with different challenges and caveats in their construction and design. In the last decade, Andrei Tokovinin and collaborators introduced the Ring Image Next Generation Scintillation Sensor (RINGSS) as a new solution for turbulence profiling and atmosphere characterization.[[4]](#bibliography)\
+RINGSS combines a scintillation sensor and a motion monitor in a compact, as originally designed, 127mm from-shelf telescope, in combination with a set of lenses and a camera capable of over one-thousand frames per second in a relatively small region of interest[[3]](#bibliography), all this to maintain a quick processing time and low-cost equipment.[[5]](#bibliography) We then take this idea and tackle it with a question, "Can we develop a bigger diameter RINGSS?". We aim to upgrade an under-used DIMM telescope at Rubin (commonly refered to as Portable DIMM), and with minimal changes implement a RINGSS in a only-theorized 304mm telescope.[[3]](#bibliography)\
 Even though we develop most part of python scripts, and the other half was already done by Andrei, we have not yet tested the telescope on-sky.
 
 
 ## 2. Theory
 
-The straight-forward objective of these sky monitors is to measure and characterize how the atmosphere affects the quality of image we can achieve with our telescopes. The atmosphere can be divided in two main layers; the ground layer, where up to 2km we have most of turbulence caused by, redundantly, ground features and low wind, but not less important over these 2 km we have the free atmosphere, that is dominated by high winds and turbulence bubbles up to 30km where we have 99% of the atmosphere[]. From our position, the effect on the wavefront is the sum of every layer collapsed into a single distorted screen at the pupil. RINGSS takes a cube-image of a defocused bright single star and measures the Optical Turbulence Profile along our optical path.[]
+The straight-forward objective of these sky monitors is to measure and characterize how the atmosphere affects the quality of image we can achieve with our telescopes.[[7]](#bibliography) The atmosphere can be divided in two main layers; the ground layer, where up to 2km we have most of turbulence caused by, redundantly, ground features and low wind, but not less important over these 2 km we have the free atmosphere, that is dominated by high winds and turbulence bubbles up to 30km where we have 99% of the atmosphere[[2]](#bibliography). From our position, the effect on the wavefront is the sum of every layer collapsed into a single distorted screen at the pupil. RINGSS takes a cube-image of a defocused bright single star and measures the Optical Turbulence Profile along our optical path.[[4]](#bibliography)
 
-RINGSS works by measuring a defocused pupil image of the telescope. It introduces spherical aberrations through a calibrated set of lenses[], and physically creates a sharp conic wavefront focused on the radial axis[], hence the "Ring Image" part of the name. This ring image is both analyzed as a MASS instrument, taking the complete brightness variation into a scintillation sensor, and by dividing the ring into eight oppossed sectors, using DIMM-like processing to find a sector derived seeing[]. 
+RINGSS works by measuring a defocused pupil image of the telescope. It introduces spherical aberrations through a calibrated set of lenses[[4]](#bibliography), and physically creates a sharp conic wavefront focused on the radial axis[[4]](#bibliography), hence the "Ring Image" part of the name. This ring image is both analyzed as a MASS instrument, taking the complete brightness variation into a scintillation sensor, and by dividing the ring into eight oppossed sectors, using DIMM-like processing to find a sector derived seeing[[1]](#bibliography). 
 
 We take into account the Kolmogorov power law, Fried parameter, Rytov variances, Weights of each layer, Turbulence Profile and then derive windspeed, free atmosphere, sector seeing and scintilaltion seeing. In that order, they work as follows: 
 - The Kolmogorov power law: (r^{-11/6} in the spatial-frequency domain) sets the statistics of the phase screen.
@@ -32,7 +32,7 @@ Zemax: Out from schemas and simple measurements of the telescope, we were able t
 
 (Zemax Image)
 
-Python: Andrei Tokovinin developed a Simulator to test possible configurations and check the modelling was correct for on-sky observations. Even though this was scripted in IDL, we translated the codes to Python 3.8 as faithful as possible, maintaining procedures, and adapting it to the different methods Python has, as well as making it more human readable and easy to test, both in CLI and in a Jupyter Notebook.
+Python: Andrei Tokovinin developed a Simulator to test possible configurations and check the modelling was correct for on-sky observations.[[6]](#bibliography) Even though this was scripted in IDL, we translated the codes to Python 3.8 as faithful as possible, maintaining procedures, and adapting it to the different methods Python has, as well as making it more human readable and easy to test, both in CLI and in a Jupyter Notebook.
 
 We can note that the complete RINGSS code separates in three sections; Acquisition, Restoration and Simulation. Currently we only take into account the two latter, as they are two sides of the complete pipeline (the Acquisition portion does not rely on the Simulation to work, and will be explained when we start on-sky testing), so we complete Andrei's on-sky half in Python with this Simulation port, allowing us to feed adapted values and conditions corresponding to our new RINGSS iteration into the simulation more automatically. Simply put, the simulation proceeds as follows:
 
@@ -52,7 +52,7 @@ As the current Tower DIMM at Rubin, we are using an IOptron Ritchey-Chretien 12"
 
 ## 5. Testing
 
-We tested the Python port against real on-sky samples, feeding the Pachon RINGSS **sector** seeing as the simulation input and comparing each recovered channel against its matched Pachon measurement (1355 matched samples, 0.45–3.5"). With the caveat that no two monitors calibrate exactly against each other due to inherent biases, we look for the trend each channel follows:
+We tested the Python port against real on-sky samples, feeding the Pachon RINGSS **sector** seeing[[5]](#bibliography) as the simulation input and comparing each recovered channel against its matched Pachon measurement (1355 matched samples, 0.45–3.5"). With the caveat that no two monitors calibrate exactly against each other due to inherent biases, we look for the trend each channel follows:
 
 - **Sector seeing** (`see2`) tracks its input almost 1:1 — R ≈ 0.99, mean ratio 0.99 against the Pachon sector seeing (R ≈ 0.93 against the co-located DIMM). This robust DIMM-like channel recovers the input faithfully.
 - **Scintillation seeing** (`see`) sits ~20% below the sector *input* (ratio ≈ 0.79), but this is the expected physical gap between the scintillation and sector channels, not a simulation error: against the Pachon *scintillation* seeing — the correct like-for-like reference — it matches almost exactly (R ≈ 0.99, ratio ≈ 1.01). The simulation reproduces the real scintillation channel.
@@ -74,9 +74,16 @@ We would like to have the telescope at 8th Floor, to compare straight with LSSTC
 
 *Full Epic: [RSO-163](https://rubinobs.atlassian.net/issues/?jql=parent%20%3D%20%22RSO-163%22%20ORDER%20BY%20created%20ASC)*
 
+(bibliography)=
 ## 8. Bibliography
 
-(ToDo - Add citations and bibliography)\
+1. [From Differential Image Motion to Seeing](archive/From%20Differential%20Image%20Motion%20to%20Seeing.pdf)
+2. [Model of optical turbulence profile at Cerro Pachón](archive/Model%20of%20optical%20turbulence%20profile%20at%20Cerro%20Pachon.pdf)
+3. [RINGSS turbulence sensor based on Celestron Nexstar 5SE](archive/RINGSS%20turbulence%20sensor%20based%20on%20Celestron%20Nexstar%205SE.pdf)
+4. [Measurement of turbulence profile from defocused ring images](archive/Measurement%20of%20turbulence%20profile%20from%20defocused%20ring%20images.pdf)
+5. [Site monitor based on the RINGSS concept](archive/Site%20monitor%20based%20on%20the%20RINGSS%20concept.pdf)
+6. [Python software for turbulence measurements with RINGSS](archive/Python%20software%20for%20turbulence%20measurements%20with%20RINGSS.pdf)
+7. [The elusive nature of seeing](archive/The%20elusive%20nature%20of%20seeing.pdf)
 (ToDo - Add images)
 
 See the [Documenteer documentation](https://documenteer.lsst.io/technotes/index.html) for tips on how to write and configure your new technote.
