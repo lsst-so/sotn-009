@@ -63,17 +63,22 @@ In short, the sector and scintillation seeings reproduce their matched on-sky ch
 
 ## 6. Conclusion
 
-We should expect similar results to those taken by R-DIMM and P-RINGSS
+(ToDo - Conclusion)
 
 ## 7. Future work
 
 The acquisition software still needs to be created and implemented, as we only ran a dry-test.
 We would like to have the telescope at 8th Floor, to compare straight with LSSTCam and its seeing measurements (DIMM-like, Donut Blur).
 
+(ToDo - Add LaTex formulas)
 
 *Full Epic: [RSO-163](https://rubinobs.atlassian.net/issues/?jql=parent%20%3D%20%22RSO-163%22%20ORDER%20BY%20created%20ASC)*
 
 ## 8. Bibliography
+
+(ToDo - Add citations and bibliography)\
+(ToDo - Add images)
+
 See the [Documenteer documentation](https://documenteer.lsst.io/technotes/index.html) for tips on how to write and configure your new technote.
 
 ##
