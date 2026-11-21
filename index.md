@@ -11,6 +11,7 @@ In an era with ever-growing telescopes and cameras, reliable atmosphere monitors
 RINGSS combines a scintillation sensor and a motion monitor in a compact, as originally designed, 127mm from-shelf telescope, in combination with a set of lenses and a camera capable of over one-thousand frames per second in a relatively small region of interest[[3]](#bibliography), all this to maintain a quick processing time and low-cost equipment.[[5]](#bibliography) We then take this idea and tackle it with a question, "Can we develop a bigger diameter RINGSS?". We aim to upgrade an under-used DIMM telescope at Rubin (commonly refered to as Portable DIMM), and with minimal changes implement a RINGSS in a only-theorized 304mm telescope.[[3]](#bibliography)\
 Even though we develop most part of python scripts, and the other half was already done by Andrei, we have not yet tested the telescope on-sky.
 
+*Full Epic: [RSO-163](https://rubinobs.atlassian.net/issues/?jql=parent%20%3D%20%22RSO-163%22%20ORDER%20BY%20created%20ASC)*
 
 ## 2. Theory
 
@@ -19,10 +20,10 @@ The straight-forward objective of these sky monitors is to measure and character
 RINGSS works by measuring a defocused pupil image of the telescope. It introduces spherical aberrations through a calibrated set of lenses[[4]](#bibliography), and physically creates a sharp conic wavefront focused on the radial axis[[4]](#bibliography), hence the "Ring Image" part of the name. This ring image is both analyzed as a MASS instrument, taking the complete brightness variation into a scintillation sensor, and by dividing the ring into eight oppossed sectors, using DIMM-like processing to find a sector derived seeing[[1]](#bibliography). 
 
 We take into account the Kolmogorov power law, Fried parameter, Rytov variances, Weights of each layer, Turbulence Profile and then derive windspeed, free atmosphere, sector seeing and scintilaltion seeing. In that order, they work as follows: 
-- The Kolmogorov power law: (r^{-11/6} in the spatial-frequency domain) sets the statistics of the phase screen.
-- The Fried parameter r0: the single scalar that encodes the seeing for a given *turbulence integral J* (via J = 0.423*(2π/λ)^2*r0^{-5/3}, with seeing ∝ (J)^{0.6}).
-- The Rytov variance: it predicts how much scintillation a layer at a given height should produce and is used as a physical sanity check on the simulated screen.
-- The per-layer weights: pre-computed response functions that say how strongly each layer contributee to each measured angular mode.
+- **The Kolmogorov power law:** (r^{-11/6} in the spatial-frequency domain) sets the statistics of the phase screen.
+- **The Fried parameter r0:** the single scalar that encodes the seeing for a given *turbulence integral J* (via J = 0.423*(2π/λ)^2*r0^{-5/3}, with seeing ∝ (J)^{0.6}).
+- **The Rytov variance:** it predicts how much scintillation a layer at a given height should produce and is used as a physical sanity check on the simulated screen.
+- **The per-layer weights:** pre-computed response functions that say how strongly each layer contributee to each measured angular mode.
 
 Then, if we take the weights and we invert them against the measured power spectrum (a non-negative least-squares fit) we get in return *the turbulence profile J(h)*. From that profile we find the total (scintillation) seeing by collapsing every layer, the free-atmosphere seeing by integrating only layers above 0.5 km, and the sector seeing independently from the radius-motion variance. Wind speed comes from how fast the scintillation pattern changes between consecutive frames. From the Fried Parameter r0 and the wind we then get the coherence time (tau) τ0, and from the profile's effective height the isoplanatic angle θ0.
 
@@ -36,13 +37,13 @@ Python: Andrei Tokovinin developed a Simulator to test possible configurations a
 
 We can note that the complete RINGSS code separates in three sections; Acquisition, Restoration and Simulation. Currently we only take into account the two latter, as they are two sides of the complete pipeline (the Acquisition portion does not rely on the Simulation to work, and will be explained when we start on-sky testing), so we complete Andrei's on-sky half in Python with this Simulation port, allowing us to feed adapted values and conditions corresponding to our new RINGSS iteration into the simulation more automatically. Simply put, the simulation proceeds as follows:
 
-1. *simatm* builds the atmosphere. From an input seeing it computes the Fried parameter r0 and the turbulence integral, splits it into a low and a high layer, and for each layer generates a Kolmogorov phase screen (r^{-11/6} spectrum scaled by 0.023^{1/2}) via an FFT. Then propagates the complex field layer-to-layer (starting at 16km, 8km, 4km and so on) and down to the ground with an angular-spectrum (Fresnel) step, so the output screen carries both the phase distortion and the height-dependent scintillation discussed in the Theory section. The field is saved to atm.npz, an image of it into the images folder, and as a diagnostic it prints the measured scintillation against the theoretical Rytov variance.
-2. *ringsim* then turns that screen into what the camera would see. It loads atm.npz, applies the telescope's annular pupil and the defocus/spherical wavefront (a4, a11) to form the ring, then slides the pupil across the screen frame by frame at the inputted wind speed, forming a time-resolved cube of ring images with photon (Poisson) and read-out (Gaussian) noise added. The cube is written as a FITS file, standing in for a real camera acquisition.
-3. *cubecoef* reduces the cube the same way that on-sky would: it finds the ring, centers every frame (sub-pixel Fourier shift), and projects each frame onto a set of sector and cos/sin angular masks to extract per-frame coefficients.
-4. *statmom* turns those per-frame coefficients into statistics.It finds the variance and one-frame-lag covariance of each angular mode (the power spectrum) and the differential radius variance of opposite sectors (the DIMM-like signal).
-5. *weights* computes, once per optical configuration, the altitude response functions (how strongly a layer at each height contributes to each measured mode) for two reference star colours, by the same Fresnel-propagation method used in simatm but run analytically per layer.
-6. *profrest* does the inversion: it noise-subtracts and saturation-corrects the measured power, fits it against the weights with a non-negative least-squares solver to recover the turbulence profile J(h), and from that profile reads out the scintillation (total), free-atmosphere and sector seeings, the wind speed, coherence time and isoplanatic angle.
-7. *testsimul* is the main script that calls all previous stages in sequence, then computes and stores the final measurements in a .csv file to analyze later, along with the inputs and outputs. autorunsimul only takes the testsimul driver, inputs what ever values we may want and runs several times the script.
+1. **simatm** builds the atmosphere. From an input seeing it computes the Fried parameter r0 and the turbulence integral, splits it into a low and a high layer, and for each layer generates a Kolmogorov phase screen (r^{-11/6} spectrum scaled by 0.023^{1/2}) via an FFT. Then propagates the complex field layer-to-layer (starting at 16km, 8km, 4km and so on) and down to the ground with an angular-spectrum (Fresnel) step, so the output screen carries both the phase distortion and the height-dependent scintillation discussed in the Theory section. The field is saved to atm.npz, an image of it into the images folder, and as a diagnostic it prints the measured scintillation against the theoretical Rytov variance.
+2. **ringsim** then turns that screen into what the camera would see. It loads atm.npz, applies the telescope's annular pupil and the defocus/spherical wavefront (a4, a11) to form the ring, then slides the pupil across the screen frame by frame at the inputted wind speed, forming a time-resolved cube of ring images with photon (Poisson) and read-out (Gaussian) noise added. The cube is written as a FITS file, standing in for a real camera acquisition.
+3. **cubecoef** reduces the cube the same way that on-sky would: it finds the ring, centers every frame (sub-pixel Fourier shift), and projects each frame onto a set of sector and cos/sin angular masks to extract per-frame coefficients.
+4. **statmom** turns those per-frame coefficients into statistics.It finds the variance and one-frame-lag covariance of each angular mode (the power spectrum) and the differential radius variance of opposite sectors (the DIMM-like signal).
+5. **weights** computes, once per optical configuration, the altitude response functions (how strongly a layer at each height contributes to each measured mode) for two reference star colours, by the same Fresnel-propagation method used in simatm but run analytically per layer.
+6. **profrest** does the inversion: it noise-subtracts and saturation-corrects the measured power, fits it against the weights with a non-negative least-squares solver to recover the turbulence profile J(h), and from that profile reads out the scintillation (total), free-atmosphere and sector seeings, the wind speed, coherence time and isoplanatic angle.
+7. **testsimul** is the main script that calls all previous stages in sequence, then computes and stores the final measurements in a .csv file to analyze later, along with the inputs and outputs. autorunsimul only takes the testsimul driver, inputs what ever values we may want and runs several times the script.
 
 ## 4. Hardware and implementation
 
@@ -67,23 +68,24 @@ In short, the sector and scintillation seeings reproduce their matched on-sky ch
 
 ## 7. Future work
 
-The acquisition software still needs to be created and implemented, as we only ran a dry-test.
-We would like to have the telescope at 8th Floor, to compare straight with LSSTCam and its seeing measurements (DIMM-like, Donut Blur).
+- The acquisition software still needs to be created and implemented, as we only ran a dry-test.
+- We would like to have the telescope at 8th Floor, to compare straight with LSSTCam and its seeing measurements (DIMM-like, Donut Blur).
+- The Mako G-040B camera still needs to be characterized, as this impacts how the instrument works.
 
 (ToDo - Add LaTex formulas)
-
-*Full Epic: [RSO-163](https://rubinobs.atlassian.net/issues/?jql=parent%20%3D%20%22RSO-163%22%20ORDER%20BY%20created%20ASC)*
 
 (bibliography)=
 ## 8. Bibliography
 
-1. [From Differential Image Motion to Seeing](archive/From%20Differential%20Image%20Motion%20to%20Seeing.pdf)
-2. [Model of optical turbulence profile at Cerro Pachón](archive/Model%20of%20optical%20turbulence%20profile%20at%20Cerro%20Pachon.pdf)
-3. [RINGSS turbulence sensor based on Celestron Nexstar 5SE](archive/RINGSS%20turbulence%20sensor%20based%20on%20Celestron%20Nexstar%205SE.pdf)
-4. [Measurement of turbulence profile from defocused ring images](archive/Measurement%20of%20turbulence%20profile%20from%20defocused%20ring%20images.pdf)
-5. [Site monitor based on the RINGSS concept](archive/Site%20monitor%20based%20on%20the%20RINGSS%20concept.pdf)
-6. [Python software for turbulence measurements with RINGSS](archive/Python%20software%20for%20turbulence%20measurements%20with%20RINGSS.pdf)
-7. [The elusive nature of seeing](archive/The%20elusive%20nature%20of%20seeing.pdf)
+1. [From Differential Image Motion to Seeing](https://github.com/lsst-so/sotn-009/blob/main/archive/From%20Differential%20Image%20Motion%20to%20Seeing.pdf0)
+2. [Model of optical turbulence profile at Cerro Pachón](https://github.com/lsst-so/sotn-009/blob/main/archive/Model%20of%20optical%20turbulence%20profile%20at%20Cerro%20Pachon.pdf)
+3. [RINGSS turbulence sensor based on Celestron Nexstar 5SE](https://github.com/lsst-so/sotn-009/blob/main/archive/RINGSS%20turbulence%20sensor%20based%20on%20Celestron%20Nexstar%205SE.pdf)
+4. [Measurement of turbulence profile from defocused ring images](https://github.com/lsst-so/sotn-009/blob/main/archive/Measurement%20of%20turbulence%20profile%20from%20defocused%20ring%20images.pdf)
+5. [Site monitor based on the RINGSS concept](https://github.com/lsst-so/sotn-009/blob/main/archive/Site%20monitor%20based%20on%20the%20RINGSS%20concept.pdf)
+6. [Python software for turbulence measurements with RINGSS](https://github.com/lsst-so/sotn-009/blob/main/archive/Python%20software%20for%20turbulence%20measurements%20with%20RINGSS.pdf)
+7. [The elusive nature of seeing](https://github.com/lsst-so/sotn-009/blob/main/archive/The%20elusive%20nature%20of%20seeing.pdf)
+
+
 (ToDo - Add images)
 
 See the [Documenteer documentation](https://documenteer.lsst.io/technotes/index.html) for tips on how to write and configure your new technote.
