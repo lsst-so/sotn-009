@@ -24,11 +24,11 @@ In other words, RINGSS works by measuring a defocused pupil image of the telesco
 
 We take into account the Kolmogorov power law, Fried parameter, Rytov variances, Weights of each layer, Turbulence Profile and then derive wind speed, free atmosphere, sector seeing and scintilaltion seeing. In that order, they work as follows: 
 - **The Kolmogorov power law:** ($r^{-11/6}$ in the spatial-frequency domain) sets the statistics of the phase screen.
-- **The Fried parameter:** the single scalar that encodes the seeing for a given *turbulence integral J* (via $J = 0.423*(2π/λ)^2*r0^{-5/3}$, with $seeing ∝ (J)^{0.6})$.
-- **The Rytov variance:** it predicts how much scintillation a layer at a given height should produce and is used as a physical sanity check on the simulated screen.
-- **The per-layer weights:** pre-computed response functions that say how strongly each layer contributee to each measured angular mode.
+- **The Fried parameter:** the single scalar that encodes the seeing for a given *turbulence integral J* (via $J = 0.423\,(2\pi/\lambda)^2\,r_0^{-5/3}$, with $\mathrm{seeing} \propto J^{0.6}$).
+- **The Rytov variance:** ($\sigma_R^2 = 19.22\,\lambda^{-7/6}\sum_i z_i^{5/6}\,J_i$) it predicts how much scintillation a layer at a given height should produce and is used as a physical sanity check on the simulated screen.
+- **The per-layer weights:** ($W_m(z) \propto \sin^2(\pi\lambda z f^2)$) pre-computed response functions that say how strongly each layer contributee to each measured angular mode.
 
-Then, if we take the weights and we invert them against the measured power spectrum (a non-negative least-squares fit) we get in return *the turbulence profile J(h)* (h being the layer/altitude). From that profile we find the total (scintillation) seeing by collapsing every layer, the free-atmosphere seeing by integrating only layers above an arbitrarily selected kilometer, and the sector seeing from the radius-motion variance. Wind speed comes from how fast the scintillation pattern changes between consecutive frames. From the Fried Parameter r0 and the wind we then get the coherence time (tau) τ0, and from the profile's effective height the isoplanatic angle (theta) θ0.
+Then, if we take the weights and we invert them against the measured power spectrum (a non-negative least-squares fit) we get in return *the turbulence profile J(h)* (J0...J16) (h being the layer/altitude). From that profile we find the total (scintillation) seeing (see, fwhmScintillation) by collapsing every layer, the free-atmosphere seeing (fsee, fwhmFree) by integrating only layers above an arbitrarily selected kilometer, and the sector seeing (see2, fwhmSector) from the radius-motion variance. Wind speed (wind) comes from how fast the scintillation pattern changes between consecutive frames. From the Fried Parameter r0 and the wind we then get the coherence time (tau) τ0 $(\tau_0 = 0.31\,r_0/\bar{v})$ (tau0), and from the profile's effective height the isoplanatic angle (theta) θ0 $(\theta_0 = 0.31\,r_0/\bar{h})$ (theta0).
 
 ## 3. Simulations and models
 
@@ -87,7 +87,7 @@ In short, the sector and scintillation seeings reproduce their matched on-sky ch
 5. [Site monitor based on the RINGSS concept](https://github.com/lsst-so/sotn-009/blob/main/archive/Site%20monitor%20based%20on%20the%20RINGSS%20concept.pdf)
 6. [Python software for turbulence measurements with RINGSS](https://github.com/lsst-so/sotn-009/blob/main/archive/Python%20software%20for%20turbulence%20measurements%20with%20RINGSS.pdf)
 7. [The elusive nature of seeing](https://github.com/lsst-so/sotn-009/blob/main/archive/The%20elusive%20nature%20of%20seeing.pdf)
-8. [CWFS Github repository]()
+8. [CWFS Github repository](https://github.com/bxin/cwfs)
 
 
 (ToDo - Add images)
