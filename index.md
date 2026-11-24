@@ -58,10 +58,10 @@ As the current Tower DIMM at Rubin, we are using an IOptron Ritchey-Chretien 12"
 
 We tested the Python port against real on-sky samples, feeding the Pachon RINGSS **sector** seeing[[5]](#bibliography) as the simulation input and comparing each recovered channel against its matched Pachon measurement (1355 matched samples, 0.45–3.5"). With the caveat that no two monitors calibrate exactly against each other due to inherent biases, we look for the trend each channel follows:
 
-- **Sector seeing** (`see2`) tracks its input almost 1:1 — R ≈ 0.99, mean ratio 0.99 against the Pachon sector seeing (R ≈ 0.93 against the co-located DIMM). This robust DIMM-like channel recovers the input faithfully.
-- **Scintillation seeing** (`see`) sits ~20% below the sector *input* (ratio ≈ 0.79), but this is the expected physical gap between the scintillation and sector channels, not a simulation error: against the Pachon *scintillation* seeing — the correct like-for-like reference — it matches almost exactly (R ≈ 0.99, ratio ≈ 1.01). The simulation reproduces the real scintillation channel.
-- **Free-atmosphere seeing** (`fsee`) correlates with the Pachon free-atmosphere seeing (R ≈ 0.83) but runs ~20% high (ratio ≈ 1.20), and is the noisiest of the three.
-- **Wind speed** is effectively decoupled from the real wind (R ≈ 0.14, sitting ~14 m/s regardless of input), consistent with Andrei Tokovinin's note that, with a single uniformly-translated phase screen (frozen flow), the recovered wind is not a meaningful quantity in these simulations.
+- **Sector seeing** (see2, fwhmSector) tracks its input almost 1:1 — R ≈ 0.99, mean ratio 0.99 against the Pachon sector seeing (R ≈ 0.93 against the co-located DIMM). This robust DIMM-like channel recovers the input faithfully.
+- **Scintillation seeing** (see, fwhmScintillation) sits ~20% below the sector *input* (ratio ≈ 0.79), but this is the expected physical gap between the scintillation and sector channels, not a simulation error: against the Pachon *scintillation* seeing — the correct like-for-like reference — it matches almost exactly (R ≈ 0.99, ratio ≈ 1.01). The simulation reproduces the real scintillation channel.
+- **Free-atmosphere seeing** (fsee, fwhmFree) correlates with the Pachon free-atmosphere seeing (R ≈ 0.83) but runs ~20% high (ratio ≈ 1.20), and is the noisiest of the three.
+- **Wind speed** (wind, wind) is effectively decoupled from the real wind (R ≈ 0.14, sitting ~14 m/s regardless of input), consistent with Andrei Tokovinin's note that, with a single uniformly-translated phase screen (frozen flow), the recovered wind is not a meaningful quantity in these simulations.
 
 In short, the sector and scintillation seeings reproduce their matched on-sky channels to within a few percent, the free-atmosphere channel is biased ~20% high, and the wind is uninformative by construction.
 
